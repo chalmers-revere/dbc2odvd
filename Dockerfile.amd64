@@ -40,5 +40,7 @@ RUN pip3 install setuptools
 RUN pip3 install wheel
 RUN pip3 install cantools
 
+ADD ./generateHeaderOnly.sh /usr/local/bin/
+
 ENV PATH=/usr/local/bin:$PATH
 
