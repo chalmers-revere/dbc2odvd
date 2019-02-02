@@ -3,7 +3,7 @@ This tool can be used during development to transform a .dbc file with CAN messa
 
 ## Building the Docker image
 ```
-docker build -t dbc2odvd:latest -f Dockerfile.amd
+docker build -t dbc2odvd:latest -f Dockerfile.amd64
 ```
 
 ## Monitoring a SocketCAN network adapter
