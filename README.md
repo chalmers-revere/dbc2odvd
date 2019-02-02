@@ -16,7 +16,36 @@ Pre-conditions:
 * A .dbc file (eg. `myFile.dbc`) is present in the current working directory.
 * A .odvd file (eg. `myFile.odvd`) is present in the current working directory.
 
-This output will be generated into `myFile.hpp`.
+This output will be generated into `myFile.hpp` and `myFile.dbc.map`.
 ```
 docker run --rm -ti -v $PWD:/in -w /in dbc2odvd:latest generateHeaderOnly.sh myFile.dbc myFile.odvd
 ```
+
+The file `myFile.dbc.map` is a simple list of signals from the dbc file followed
+by a colon; you need to add a mapping entry to an existing ODVD message for those
+CAN signals that are of interest. Example:
+```
+fh16gw_vehicle_dynamics_t.acceleration_x:opendlv.proxy.rhino.VehicleState.accelerationX
+fh16gw_vehicle_dynamics_t.acceleration_y:opendlv.proxy.rhino.VehicleState.accelerationY
+fh16gw_vehicle_dynamics_t.yaw_rate:opendlv.proxy.rhino.VehicleState.yawRate
+```
+
+Afterwards, continue with the last step to generate the code snippet that
+runs the actual mapping.
+
+## Generate the code snippet to map ODVD messages to/from CAN frames
+Pre-conditions:
+* A .dbc.map file.
+
+This output will be printed to stdout and can be directly added to you code.
+```
+docker run --rm -ti -v $PWD:/in -w /in dbc2odvd:latest generateMappingCodeSnippet.awk myFile.dbc.map
+```
+
+The code snippet can be invoked to pass raw CAN frame data using the following
+interface:
+
+```cpp
+inline void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len);
+```
+

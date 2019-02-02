@@ -1,3 +1,8 @@
+*.map
+*.dbc
+*.hpp
+*.odvd
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

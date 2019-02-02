@@ -34,6 +34,7 @@ RUN add-apt-repository ppa:chrberger/libcluon && \
 RUN apt-get install -y --no-install-recommends \
       build-essential \
       can-utils \
+      gawk \
       python3-pip
 
 RUN pip3 install setuptools
@@ -41,6 +42,7 @@ RUN pip3 install wheel
 RUN pip3 install cantools
 
 ADD ./generateHeaderOnly.sh /usr/local/bin/
+ADD ./generateMappingCodeSnippet.awk /usr/local/bin/
 
 ENV PATH=/usr/local/bin:$PATH
 
