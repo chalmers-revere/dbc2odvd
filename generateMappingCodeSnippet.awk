@@ -29,8 +29,14 @@ END {
     print "inline void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len);"
     print "void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len) {"
     print "    if ( (nullptr == buffer) || (0 == len) ) return;"
+    structCounter = 0
     for (structName in mapOfAllStructs) {
+    if (0 == structCounter) {
     print "    if (" toupper(structName) "_FRAME_ID == canFrameID) {"
+    }
+    else {
+    print "    else if (" toupper(structName) "_FRAME_ID == canFrameID) {"
+    }
     print "        "structName "_t tmp;"
     print "        if (0 == " structName "_unpack(&tmp, buffer, len)) {"
         split(substr(mapOfAllStructs[structName],2), fieldsInStruct, ",")
@@ -72,6 +78,7 @@ END {
         }
     print "        }"
     print "    }"
+    structCounter++
     }
     print "}"
 }
