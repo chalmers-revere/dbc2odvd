@@ -49,3 +49,16 @@ interface:
 inline void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len);
 ```
 
+The code snippet contains also template code that is useful for mapping
+incoming ODVD messages to CAN frames in the following interface:
+
+```cpp
+inline int encode(uint8_t *dst, uint8_t len);
+```
+
+However, the code to map high-level ODVD messages to low-level CAN frames
+requires some more logic to glue the actual template code to the ODVD message
+handling, the encode method is not directly useful but shall rather serve as
+illustration.
+
+

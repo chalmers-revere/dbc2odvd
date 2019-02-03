@@ -25,10 +25,60 @@ BEGIN {
 }
 
 END {
+    # Generate encoder.
+    print "inline int encode(uint8_t *dst, uint8_t len);"
+    print "int encode(uint8_t *dst, uint8_t len) {"
+    print "    if ( (nullptr == dst) || (0 == len) ) return 0;"
+    print "    // TODO: Provide logic to check what messages to actually encode; the code in the"
+    print "    //       following is mainly template code for illustration."
+    print " "
+    for (structName in mapOfAllStructs) {
+    print "    // Message to encode: " toupper(structName) "_FRAME_ID"
+    print "    {"
+    print "        "structName "_t tmp;"
+        split(substr(mapOfAllStructs[structName],2), fieldsInStruct, ",")
+        ODVDMessage = ""
+        foundMapping = 0
+        for (field in fieldsInStruct) {
+            # Extract mapping.
+            split(fieldsInStruct[field], mapping, ":")
+            if ("" == ODVDMessage) {
+                # Create instance from ODVD message.
+                n = split(mapping[2], tokens, ".")
+                for (i = 1; i < n-1; i++) {
+                    ODVDMessage = ODVDMessage tokens[i] "::"
+                }
+                ODVDMessage = ODVDMessage tokens[n-1]
+                foundMapping = ("" != ODVDMessage)
+                if (foundMapping) {
+                    print "        // The following msg would have to be passed to this encoder externally."
+                    print "        " ODVDMessage " msg;"
+                }
+            }
+            if (foundMapping) {
+                n = split(mapping[2], tokens, ".")
+                ODVDMessageAttribute = tokens[n]
+                print "        tmp." mapping[1] " = " structName "_" mapping[1] "_encode(msg." ODVDMessageAttribute "());"
+            }
+        }
+        if (foundMapping) {
+            print "        // The following statement packs the encoded values into a CAN frame."
+            print "        int size = " structName "_pack(dst, &tmp, len);"
+            print "        return size;"
+        }
+        else {
+            print "        (void)tmp;"
+            print "        // No mapping defined for " structName
+        }
+    print "    }"
+    }
+    print "}"
+
+
     # Generate decoder.
-    print "inline void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len);"
-    print "void decode(uint16_t canFrameID, uint8_t *buffer, uint8_t len) {"
-    print "    if ( (nullptr == buffer) || (0 == len) ) return;"
+    print "inline void decode(uint16_t canFrameID, uint8_t *src, uint8_t len);"
+    print "void decode(uint16_t canFrameID, uint8_t *src, uint8_t len) {"
+    print "    if ( (nullptr == src) || (0 == len) ) return;"
     structCounter = 0
     for (structName in mapOfAllStructs) {
     if (0 == structCounter) {
@@ -38,7 +88,7 @@ END {
     print "    else if (" toupper(structName) "_FRAME_ID == canFrameID) {"
     }
     print "        "structName "_t tmp;"
-    print "        if (0 == " structName "_unpack(&tmp, buffer, len)) {"
+    print "        if (0 == " structName "_unpack(&tmp, src, len)) {"
         split(substr(mapOfAllStructs[structName],2), fieldsInStruct, ",")
         ODVDMessage = ""
         foundMapping = 0
