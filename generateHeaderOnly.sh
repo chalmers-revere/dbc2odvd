@@ -19,6 +19,7 @@ cd /tmp && rm -fr gen && mkdir gen && cd gen && \
 cantools generate_c_source $WD/$1 && \
 HEADER_FILE=$(ls *.h)
 SOURCE_FILE=$(ls *.c)
+cat $SOURCE_FILE | sed -e 's/\(#include\ "\)/\/\/\1/g' > ${SOURCE_FILE}.mod && \
 cat $HEADER_FILE | sed -e '/^struct.*{/{:1; /}\;$/!{N; b1;};p };d;' | sed -r ':a; s%(.*)/\*.*\*/%\1%; ta; /\/\*/ !b; N; ba'|sed -e '/^[[:space:]]*$/d'|sed '
 /^struct/{
 h
@@ -26,6 +27,6 @@ d
 }
 G
 s/^\(.*\)\n\(.*\)/\2 \1\:/' | grep -v "{ };" | tr -s " " " "| cut -f2,5 -d" "|sed -e 's/\ /\./g;s/\;//g' > $WD/${1}.map && \
-cat $HEADER_FILE | sed -e 's/\(^[^\ \}\#\/\\].*_encode.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_decode.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_is_in_range.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_pack.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_unpack.*\)/inline\ \1/g' > $HEADER_FILE.mod && cat $SOURCE_FILE >> $HEADER_FILE.mod && cat $HEADER_FILE.mod > $WD/${HEADER_FILE}pp && \
+cat $HEADER_FILE | sed -e 's/\(^[^\ \}\#\/\\].*_encode.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_decode.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_is_in_range.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_pack.*\)/inline\ \1/g;s/\(^[^\ \}\#\/\\].*_unpack.*\)/inline\ \1/g' > $HEADER_FILE.mod && cat ${SOURCE_FILE}.mod >> $HEADER_FILE.mod && cat $HEADER_FILE.mod > $WD/${HEADER_FILE}pp && \
 cluon-msc --cpp $WD/$2 >> $WD/${HEADER_FILE}pp
 
