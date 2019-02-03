@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 BEGIN {
-    FS="_t.";
+    FS="_t\\.";
 }
 
 # Build map of entries:
