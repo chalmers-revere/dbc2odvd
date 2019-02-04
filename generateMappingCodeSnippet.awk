@@ -58,7 +58,9 @@ END {
             if (foundMapping) {
                 n = split(mapping[2], tokens, ".")
                 ODVDMessageAttribute = tokens[n]
-                print "        tmp." mapping[1] " = " structName "_" mapping[1] "_encode(msg." ODVDMessageAttribute "());"
+                if ("" != ODVDMessageAttribute) {
+                    print "        tmp." mapping[1] " = " structName "_" mapping[1] "_encode(msg." ODVDMessageAttribute "());"
+                }
             }
         }
         if (foundMapping) {
@@ -110,7 +112,9 @@ END {
             if (foundMapping) {
                 n = split(mapping[2], tokens, ".")
                 ODVDMessageAttribute = tokens[n]
-                print "            msg." ODVDMessageAttribute "(" structName "_" mapping[1] "_decode(" "tmp." mapping[1] "));"
+                if ("" != ODVDMessageAttribute) {
+                    print "            msg." ODVDMessageAttribute "(" structName "_" mapping[1] "_decode(" "tmp." mapping[1] "));"
+                }
             }
         }
         if (foundMapping) {
