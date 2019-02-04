@@ -36,7 +36,7 @@ END {
     print "    // Message to encode: " toupper(structName) "_FRAME_ID"
     print "    {"
     print "        "structName "_t tmp;"
-    print "        "memset(&tmp, 0, sizeof(tmp));"
+    print "        memset(&tmp, 0, sizeof(tmp));"
         split(substr(mapOfAllStructs[structName],2), fieldsInStruct, ",")
         ODVDMessage = ""
         foundMapping = 0
