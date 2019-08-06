@@ -3,12 +3,12 @@ This tool can be used during development to transform a .dbc file with CAN messa
 
 ## Pulling the Docker image
 ```
-docker pull chalmersrevere/dbc2odvd:v0.0.6
+docker pull chalmersrevere/dbc2odvd-amd64:v0.0.6
 ```
 
 ## Alternative: Building the Docker image
 ```
-docker build -t dbc2odvd:v0.0.6 -f Dockerfile.amd64
+docker build -t dbc2odvd-amd64:v0.0.6 -f Dockerfile.amd64
 ```
 
 ## Monitoring a SocketCAN network adapter
